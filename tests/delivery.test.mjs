@@ -5,8 +5,10 @@ import { readFile, stat } from 'node:fs/promises';
 test('index is a classic-script file entry with only relative runtime paths', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   assert.doesNotMatch(html, /type=["']module["']/i);
-  assert.match(html, /<script defer src="\.\/assets\/app\.js"><\/script>/);
-  assert.match(html, /href="\.\/assets\/app\.css"/);
+  const scriptVersion = html.match(/<script defer src="\.\/assets\/app\.js\?v=([^"]+)"><\/script>/)?.[1];
+  const styleVersion = html.match(/href="\.\/assets\/app\.css\?v=([^"]+)"/)?.[1];
+  assert.ok(scriptVersion, 'app.js needs a cache-busting version');
+  assert.equal(styleVersion, scriptVersion, 'CSS and JS should share the same version');
   assert.doesNotMatch(html, /(?:src|href)=["'](?:\.\.\/|[A-Za-z]:\\|\/)/);
 });
 

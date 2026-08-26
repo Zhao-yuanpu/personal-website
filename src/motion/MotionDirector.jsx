@@ -5,11 +5,10 @@ const sectionNames = ['home', 'growth', 'interests', 'contact'];
 
 function animateHero() {
   createTimeline({ defaults: { ease: 'out(4)' } })
-    .add('.ambient-orbit', { opacity: [0, 0.5], scale: [0.82, 1], duration: 1200 }, 0)
-    .add('.hero-portrait-wrap', { opacity: [0, 1], y: [42, 0], scale: [0.965, 1], filter: ['blur(10px) brightness(.55)', 'blur(0px) brightness(.78)'], duration: 1100 }, 140)
-    .add('.hero-title span', { opacity: [0, 1], y: ['115%', '0%'], duration: 850, delay: stagger(110) }, 420)
-    .add('.hero-meta, .hero-tags, .hero-copy .eyebrow', { opacity: [0, 1], y: [16, 0], duration: 620, delay: stagger(80) }, 620)
-    .add('.city-group', { opacity: [0, 1], scale: [0.94, 1], x: (_, index) => index ? [46, 0] : [-46, 0], filter: ['blur(5px)', 'blur(0px)'], duration: 1000, delay: stagger(140) }, 540)
+    .add('.hero-city-layer', { opacity: [0, 1], scale: [0.985, 1], x: (_, index) => index === 0 ? [-46, 0] : index === 2 ? [46, 0] : [0, 0], filter: ['blur(5px)', 'blur(0px)'], duration: 1150, delay: stagger(130) }, 0)
+    .add('.hero-portrait-wrap', { opacity: [0, 1], y: [42, 0], scale: [0.97, 1], filter: ['blur(8px) brightness(.72)', 'blur(0px) brightness(1)'], duration: 1100 }, 180)
+    .add('.hero-title span', { opacity: [0, 1], y: ['115%', '0%'], duration: 850, delay: stagger(110) }, 430)
+    .add('.hero-meta, .hero-tags', { opacity: [0, 1], y: [16, 0], duration: 620, delay: stagger(80) }, 650)
     .add('.hero-route, .city-label, .hero-direction, .scroll-cue', { opacity: [0, 1], duration: 620, delay: stagger(70) }, 900);
 }
 

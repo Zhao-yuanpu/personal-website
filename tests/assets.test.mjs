@@ -15,6 +15,7 @@ const requiredAssets = [
   'interest-music.png',
   'interest-running.png',
   'interest-movies.png',
+  'hero-city-panorama.png',
 ];
 
 test('all runtime image assets are self-contained and non-empty', async () => {
