@@ -9,7 +9,7 @@ function animateHero() {
     .add('.hero-portrait-wrap', { opacity: [0, 1], y: [42, 0], scale: [0.97, 1], filter: ['blur(8px) brightness(.72)', 'blur(0px) brightness(1)'], duration: 1100 }, 180)
     .add('.hero-title span', { opacity: [0, 1], y: ['115%', '0%'], duration: 850, delay: stagger(110) }, 430)
     .add('.hero-meta, .hero-tags', { opacity: [0, 1], y: [16, 0], duration: 620, delay: stagger(80) }, 650)
-    .add('.hero-route, .city-label, .hero-direction, .scroll-cue', { opacity: [0, 1], duration: 620, delay: stagger(70) }, 900);
+    .add('.hero-route, .city-label, .hero-direction, .scroll-cue', { opacity: [0, 1], y: [8, 0], duration: 620, delay: stagger(70) }, 900);
 }
 
 function animateGrowth() {
@@ -74,6 +74,7 @@ function animateContact() {
     ease: 'out(4)',
   });
   animate('.qr-crop img', { filter: ['blur(7px)', 'blur(0px)'], opacity: [0.55, 1], duration: 900, delay: 540, ease: 'out(3)' });
+  animate('.contact-axis', { opacity: [0, 0.55], scale: [0.8, 1], duration: 900, delay: 480, ease: 'out(4)' });
 }
 
 const sectionAnimations = {
@@ -86,6 +87,7 @@ const sectionAnimations = {
 export function MotionDirector({ children, onSectionChange }) {
   const root = useRef(null);
   const scope = useRef(null);
+  const activeSection = useRef('home');
 
   useEffect(() => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -103,8 +105,12 @@ export function MotionDirector({ children, onSectionChange }) {
         .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
       if (!visible) return;
       const name = visible.target.dataset.section;
+      if (activeSection.current === name) return;
+      const previousIndex = sectionNames.indexOf(activeSection.current);
+      activeSection.current = name;
       onSectionChange(name);
       root.current.dataset.currentSection = name;
+      root.current.dataset.scrollDirection = sectionNames.indexOf(name) > previousIndex ? 'forward' : 'backward';
       if (!reducedMotion && !animated.has(name)) {
         animated.add(name);
         scope.current.add(sectionAnimations[name]);
