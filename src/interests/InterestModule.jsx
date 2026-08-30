@@ -1,6 +1,6 @@
-export function InterestModule({ item, children }) {
+export function InterestModule({ item, children, moduleRef, onClick }) {
   return (
-    <a className={`interest-module interest-module--${item.id}`} href={item.href} data-interest={item.id}>
+    <a ref={moduleRef} className={`interest-module interest-module--${item.id}`} href={item.href} data-interest={item.id} onClick={onClick}>
       <img src={item.image} alt="" className="interest-image" />
       <div className="interest-shade" />
       <div className="interest-top">

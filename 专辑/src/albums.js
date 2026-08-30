@@ -1,0 +1,107 @@
+const appleMusicAlbums = {
+  'cover-01': 'https://music.apple.com/cn/album/liszt-hungarian-rhapsodies/1452171951',
+  'cover-02': 'https://music.apple.com/cn/album/transcendental-liszt-%C3%A9tudes/1440779332',
+  'cover-03': 'https://music.apple.com/cn/album/chopin-nocturnes/715385413',
+  'cover-04': 'https://music.apple.com/cn/album/50-of-the-best-chopin/479082366',
+  'cover-05': 'https://music.apple.com/cn/album/rachmaninoff-150/1705084833',
+  'cover-06': 'https://music.apple.com/cn/album/rachmaninoff-symphony-no-2/1720950253',
+  'cover-07': 'https://music.apple.com/cn/album/heifetz-tchaikovsky-mendelssohn-concertos/1719321513',
+  'cover-08': 'https://music.apple.com/cn/album/sibelius-violin-concerto-in-d-minor-op-47-ep/458436919',
+  'cover-09': 'https://music.apple.com/cn/album/sviatoslav-richter-the-complete-album-collection/946039986',
+  'cover-10': 'https://music.apple.com/cn/album/sviatoslav-richter-pianist-of-the-century-complete-dg-solo/1452336583',
+  'cover-11': 'https://music.apple.com/cn/album/great-recordings-of-the-century-liszt/691349969',
+  'cover-12': 'https://music.apple.com/cn/album/gy%C3%B6rgy-cziffra-the-early-columbia-records/903181458',
+};
+
+const album = (id, title, artist, tracks) => ({
+  id,
+  title,
+  artist,
+  coverSrc: `./assets/covers/${id}.jpg`,
+  tracks,
+  appleMusicUrl: appleMusicAlbums[id],
+});
+
+export const albums = [
+  album('cover-01', 'The 19 Hungarian Rhapsodies', 'Roberto Szidon', [
+    'Hungarian Rhapsody No. 1 in C-sharp Minor',
+    'Hungarian Rhapsody No. 2 in C-sharp Minor',
+    'Hungarian Rhapsody No. 3 in B-flat Major',
+    'Hungarian Rhapsody No. 4 in E-flat Major',
+    'Hungarian Rhapsody No. 5 in E Minor',
+  ]),
+  album('cover-02', 'Transcendental', 'Daniil Trifonov', [
+    'Prelude in C Major',
+    'Fusées',
+    'Paysage',
+    'Mazeppa',
+    'Chasse-neige',
+  ]),
+  album('cover-03', 'The Nocturnes', 'Arthur Rubinstein · Frédéric Chopin', [
+    'Nocturne in B-flat Minor, Op. 9 No. 1',
+    'Nocturne in E-flat Major, Op. 9 No. 2',
+    'Nocturne in F-sharp Major, Op. 15 No. 2',
+    'Nocturne in C Minor, Op. 48 No. 1',
+    'Nocturne in E Major, Op. 62 No. 2',
+  ]),
+  album('cover-04', '50 of the Best: Chopin', 'Frédéric Chopin', [
+    'Ballade No. 1 in G Minor, Op. 23',
+    'Etude in C Minor, Op. 10 No. 12',
+    'Prelude in D-flat Major, Op. 28 No. 15',
+    'Polonaise in A-flat Major, Op. 53',
+    'Waltz in C-sharp Minor, Op. 64 No. 2',
+  ]),
+  album('cover-05', 'Rachmaninoff 150', 'Kirill Gerstein · Berlin Philharmonic · Kirill Petrenko', [
+    'Piano Concerto No. 2: I. Moderato',
+    'Piano Concerto No. 2: II. Adagio sostenuto',
+    'Piano Concerto No. 2: III. Allegro scherzando',
+    'Mélodie, Op. 3 No. 3',
+    'Variations on a Theme of Corelli, Op. 42',
+  ]),
+  album('cover-06', 'Rachmaninoff: Symphony No. 2', 'Berlin Philharmonic · Kirill Petrenko', [
+    'I. Largo - Allegro moderato',
+    'II. Allegro molto',
+    'III. Adagio',
+    'IV. Allegro vivace',
+  ]),
+  album('cover-07', 'Violin Concertos', 'Jascha Heifetz', [
+    'Tchaikovsky: Violin Concerto in D Major, Op. 35',
+    'Mendelssohn: Violin Concerto in E Minor, Op. 64',
+    'Tchaikovsky: Canzonetta',
+    'Mendelssohn: Allegro molto appassionato',
+  ]),
+  album('cover-08', 'Violin Concerto in D Minor', 'Jascha Heifetz', [
+    'Sibelius: Violin Concerto in D Minor, Op. 47',
+    'Sibelius: Adagio di molto',
+    'Glazunov: Violin Concerto in A Minor, Op. 82',
+    'Sarasate: Zigeunerweisen, Op. 20',
+  ]),
+  album('cover-09', 'The Complete Album Collection', 'Sviatoslav Richter', [
+    'Bach: The Well-Tempered Clavier, Book I',
+    'Beethoven: Piano Sonata No. 23, Op. 57',
+    'Schubert: Piano Sonata in B-flat Major, D. 960',
+    'Schumann: Fantasie in C Major, Op. 17',
+    'Prokofiev: Piano Sonata No. 7, Op. 83',
+  ]),
+  album('cover-10', 'Pianist of the Century', 'Sviatoslav Richter', [
+    'Bach: Partita No. 1 in B-flat Major, BWV 825',
+    'Haydn: Piano Sonata in E-flat Major, Hob. XVI:52',
+    'Liszt: Piano Sonata in B Minor, S. 178',
+    'Debussy: Préludes, Book I',
+    'Rachmaninoff: Études-tableaux, Op. 39',
+  ]),
+  album('cover-11', 'Hungarian Rhapsodies', 'Georges Cziffra', [
+    'Hungarian Rhapsody No. 2 in C-sharp Minor',
+    'Hungarian Rhapsody No. 6 in D-flat Major',
+    'Hungarian Rhapsody No. 12 in C-sharp Minor',
+    'Hungarian Rhapsody No. 15 in A Minor',
+    'Hungarian Rhapsody No. 19 in D Minor',
+  ]),
+  album('cover-12', 'The Early Columbia Recordings', 'György Cziffra', [
+    'Liszt: La Campanella',
+    'Liszt: Mephisto Waltz No. 1',
+    'Chopin: Etude in A-flat Major, Op. 25 No. 1',
+    'Chopin: Scherzo No. 3 in C-sharp Minor',
+    'Brahms: Paganini Variations, Op. 35',
+  ]),
+];

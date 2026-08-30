@@ -140,6 +140,13 @@ h1, h2, h3 { font-family: var(--serif); text-wrap: balance; }
 .interest-module:focus-visible { outline: 2px solid var(--orange); outline-offset: 4px; }
 .interest-module:active { transform: scale(.985) !important; filter: brightness(.92); }
 .interest-route-note { margin: 16px 0 0; color: #6e5a47; font: 500 9px/1 var(--mono); letter-spacing: .16em; text-align: right; }
+.album-portal-active, .album-portal-active body { overflow: hidden; }
+.album-portal-layer { position: fixed; z-index: 120; inset: 0; visibility: hidden; pointer-events: none; }
+.album-portal-backdrop { position: absolute; inset: 0; background: #090b0b; opacity: 0; }
+.album-portal-cover {
+  position: fixed; max-width: none; object-fit: cover; border-radius: 19px;
+  box-shadow: 0 34px 110px rgba(0,0,0,.56); will-change: transform, opacity;
+}
 
 /* Contact */
 .contact-section { min-height: 880px; display: grid; grid-template-columns: 1fr 506px; gap: 94px; padding-top: 156px; }

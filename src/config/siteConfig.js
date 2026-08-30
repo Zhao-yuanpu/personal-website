@@ -10,7 +10,7 @@ export const siteConfig = {
       id: 'music',
       label: 'CLASSICAL MUSIC',
       title: '古典乐',
-      href: '#/interests/music',
+      href: './专辑/index.html',
       image: './assets/images/interest-music.png',
     },
     {

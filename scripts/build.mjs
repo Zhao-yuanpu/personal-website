@@ -1,8 +1,6 @@
 import { build } from 'esbuild';
 
-await build({
-  entryPoints: ['src/main.jsx'],
-  outdir: 'assets',
+const shared = {
   entryNames: 'app',
   bundle: true,
   format: 'iife',
@@ -11,6 +9,12 @@ await build({
   jsx: 'automatic',
   minify: true,
   legalComments: 'none',
+  loader: { '.jpg': 'dataurl' },
   sourcemap: false,
   logLevel: 'info',
-});
+};
+
+await Promise.all([
+  build({ ...shared, entryPoints: ['src/main.jsx'], outdir: 'assets' }),
+  build({ ...shared, entryPoints: ['专辑/src/main.jsx'], outdir: '专辑/assets' }),
+]);

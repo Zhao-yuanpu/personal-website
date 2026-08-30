@@ -14,10 +14,10 @@ test('navigation contains the four approved sections', () => {
   );
 });
 
-test('interest modules expose three distinct hash routes', () => {
+test('interest modules expose three distinct routes', () => {
   const routes = siteConfig.interests.map(({ href }) => href);
   assert.deepEqual(routes, [
-    '#/interests/music',
+    './专辑/index.html',
     '#/interests/sports',
     '#/interests/movies',
   ]);

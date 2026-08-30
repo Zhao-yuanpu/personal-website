@@ -13,8 +13,13 @@ test('index is a classic-script file entry with only relative runtime paths', as
 });
 
 test('delivery bundles exist and are non-empty', async () => {
-  for (const path of ['../assets/app.js', '../assets/app.css']) {
+  for (const path of ['../assets/app.js', '../assets/app.css', '../专辑/assets/app.js', '../专辑/assets/app.css']) {
     const info = await stat(new URL(path, import.meta.url));
     assert.ok(info.size > 1_000, `${path} is unexpectedly small`);
   }
+});
+
+test('album bundle inlines cover images for file protocol pages', async () => {
+  const js = await readFile(new URL('../专辑/assets/app.js', import.meta.url), 'utf8');
+  assert.match(js, /data:image\/jpeg;base64,/);
 });

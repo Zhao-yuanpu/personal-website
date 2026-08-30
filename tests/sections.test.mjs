@@ -28,7 +28,7 @@ test('renders the approved interests title and independent module routes', async
     assert.match(html, new RegExp(moduleName));
   }
   for (const route of [
-    '#/interests/music',
+    './专辑/index.html',
     '#/interests/sports',
     '#/interests/movies',
   ]) {
