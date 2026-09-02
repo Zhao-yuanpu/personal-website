@@ -25,10 +25,10 @@ export const getAlbumPose = (offset, mobile = false) => {
   if (mobile) {
     return {
       x: 0,
-      y: -offset * 1.34,
+      y: -offset * 2.4,
       z: 0.25 - distance * 0.56,
-      rotationX: offset === 0 ? 0 : offset < 0 ? -0.82 : 0.82,
-      rotationY: offset === 0 ? 0 : offset < 0 ? -0.12 : 0.12,
+      rotationX: clamp(offset * 1.02, -1.02, 1.02),
+      rotationY: clamp(offset * 0.12, -0.12, 0.12),
       rotationZ: offset * -0.015,
       scale,
     };
@@ -147,7 +147,7 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
       texture.minFilter = THREE.LinearMipmapLinearFilter;
       material.map = texture;
       material.needsUpdate = true;
-      render();
+      scheduleRender();
     });
   };
 
@@ -184,6 +184,7 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
   let pointerStart = null;
   let lastWheelAt = 0;
   let destroyed = false;
+  let renderFrame = null;
 
   const render = () => {
     if (destroyed) return;
@@ -207,15 +208,23 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
     renderer.render(scene, camera);
   };
 
+  const scheduleRender = () => {
+    if (renderFrame !== null) return;
+    renderFrame = requestAnimationFrame(() => {
+      renderFrame = null;
+      render();
+    });
+  };
+
   const snap = (target) => {
     const destination = clampAlbumIndex(target, albums.length);
     gsap.killTweensOf(state);
     gsap.to(state, {
       cursor: destination,
-      duration: reducedMotion() ? 0.12 : 0.58,
-      ease: 'power3.out',
-      onUpdate: render,
-      onComplete: render,
+      duration: reducedMotion() ? 0.12 : state.mobile ? 0.42 : 0.58,
+      ease: state.mobile ? 'power2.out' : 'power3.out',
+      onUpdate: scheduleRender,
+      onComplete: scheduleRender,
     });
   };
 
@@ -229,7 +238,7 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
     camera.position.set(0, state.mobile ? 0 : 0.05, getCameraDistance(state.mobile));
     camera.lookAt(0, 0, 0);
     renderer.setSize(rect.width, rect.height, false);
-    render();
+    scheduleRender();
   };
 
   const localPointer = (event) => {
@@ -261,7 +270,7 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
     const dragDistance = state.mobile ? Math.max(canvas.clientHeight * 0.27, 160) : Math.max(canvas.clientWidth * 0.2, 230);
     const delta = state.mobile ? -dy / dragDistance : -dx / dragDistance;
     state.cursor = clamp(pointerStart.cursor + delta, -0.35, albums.length - 0.65);
-    render();
+    scheduleRender();
   };
 
   const onPointerUp = (event) => {
@@ -293,11 +302,11 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
   const onPointerOver = (event) => {
     const index = hitTest(event);
     if (index < 0) return;
-    gsap.to(hover[index], { value: 1, duration: 0.2, onUpdate: render });
+    gsap.to(hover[index], { value: 1, duration: 0.2, onUpdate: scheduleRender });
   };
 
   const onPointerOut = () => {
-    hover.forEach((_, index) => gsap.to(hover[index], { value: 0, duration: 0.2, onUpdate: render }));
+    hover.forEach((_, index) => gsap.to(hover[index], { value: 0, duration: 0.2, onUpdate: scheduleRender }));
   };
 
   canvas.addEventListener('pointerdown', onPointerDown);
@@ -314,7 +323,7 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
     intro: 1,
     duration: reducedMotion() ? 0.12 : 0.9,
     ease: 'power3.out',
-    onUpdate: render,
+    onUpdate: scheduleRender,
   });
 
   return {
@@ -322,6 +331,7 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
     openCurrent,
     destroy: () => {
       destroyed = true;
+      if (renderFrame !== null) cancelAnimationFrame(renderFrame);
       gsap.killTweensOf(state);
       hover.forEach((value) => gsap.killTweensOf(value));
       canvas.removeEventListener('pointerdown', onPointerDown);

@@ -54,6 +54,20 @@ test('album poses preserve a front-left/back-right desktop fan and mobile stack'
   assert.equal(clampAlbumIndex(99, albums.length), albums.length - 1);
 });
 
+test('mobile album neighbors keep enough vertical clearance to avoid cover intersection', () => {
+  assert.ok(Math.abs(getAlbumPose(-1, true).y) >= 2.4);
+  assert.ok(Math.abs(getAlbumPose(-1, true).rotationX) >= 1);
+});
+
+test('mobile album tilt eases continuously into the center position', () => {
+  const left = getAlbumPose(-0.01, true);
+  const right = getAlbumPose(0.01, true);
+  assert.ok(Math.abs(left.rotationX) < 0.02);
+  assert.ok(Math.abs(right.rotationX) < 0.02);
+  assert.ok(Math.abs(left.rotationY) < 0.01);
+  assert.ok(Math.abs(right.rotationY) < 0.01);
+});
+
 test('desktop fan keeps the left and right perspectives independent', () => {
   const left = getAlbumPose(-1);
   const right = getAlbumPose(1);
