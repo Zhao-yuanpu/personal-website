@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { albums, } from '../专辑/src/albums.js';
 import * as albumScene from '../专辑/src/albumScene.js';
 
-const { clampAlbumIndex, getAlbumPose, getCameraDistance, resolveCoverUrl } = albumScene;
+const { clampAlbumIndex, getAlbumPose, getCameraDistance, getAlbumSnapTarget, resolveCoverUrl } = albumScene;
 
 test('album page stays a static Apple Music handoff', async () => {
   const html = await readFile(new URL('../专辑/index.html', import.meta.url), 'utf8');
@@ -52,6 +52,17 @@ test('album poses preserve a front-left/back-right desktop fan and mobile stack'
   assert.ok(getAlbumPose(-1, true).y > getAlbumPose(1, true).y);
   assert.equal(clampAlbumIndex(-2, albums.length), 0);
   assert.equal(clampAlbumIndex(99, albums.length), albums.length - 1);
+});
+
+test('album snapping tolerates small drags and uses release velocity', () => {
+  const snap = (cursor, velocity = 0) => getAlbumSnapTarget({ start: 3, cursor, velocity, count: 12 });
+  assert.equal(snap(3.05), 3);
+  assert.equal(snap(3.35), 4);
+  assert.equal(snap(3.85), 4);
+  assert.equal(snap(3.12, 3), 4);
+  assert.equal(snap(2.88, -3), 2);
+  assert.equal(getAlbumSnapTarget({ start: 0, cursor: -0.2, velocity: -3, count: 12 }), 0);
+  assert.equal(getAlbumSnapTarget({ start: 11, cursor: 11.2, velocity: 3, count: 12 }), 11);
 });
 
 test('mobile album neighbors keep enough vertical clearance to avoid cover intersection', () => {

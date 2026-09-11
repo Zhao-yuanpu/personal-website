@@ -20,7 +20,7 @@ export function ContactSection() {
       <aside className="wechat-panel">
         <div className="wechat-index"><span>WECHAT / 微信</span><b>03</b></div>
         <figure className="qr-card">
-          <div className="qr-crop"><img src={wechatQrSrc} alt="赵元浦的微信二维码" /></div>
+          <div className="qr-crop"><img loading="lazy" src={wechatQrSrc} alt="赵元浦的微信二维码" /></div>
           <figcaption>微信二维码 <span>SCAN TO CONNECT</span></figcaption>
         </figure>
         <p>扫一扫，添加我为朋友 <b>↗</b></p>
@@ -35,7 +35,7 @@ export function ContactSection() {
             key={index}
             style={{ clipPath: `inset(0 ${(6 - index) * 100 / 7}% 0 ${index * 100 / 7}%)` }}
           >
-            <img src="./assets/images/library-front-lineart.png" alt="" />
+            <img loading="lazy" src="./assets/images/library-front-lineart.webp" alt="" />
           </div>
         ))}
       </div>

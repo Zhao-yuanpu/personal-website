@@ -9,7 +9,6 @@ const shared = {
   jsx: 'automatic',
   minify: true,
   legalComments: 'none',
-  loader: { '.jpg': 'dataurl' },
   sourcemap: false,
   logLevel: 'info',
 };

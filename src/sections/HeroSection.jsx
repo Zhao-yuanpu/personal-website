@@ -5,7 +5,7 @@ export function HeroSection() {
     <section id="home" data-section="home" className="section hero-section">
       <div className="hero-city" aria-hidden="true">
         {cityLayers.map((layer) => (
-          <img key={layer} src="./assets/images/hero-city-panorama.png" alt="" className={`hero-city-layer hero-city-layer--${layer}`} />
+          <img key={layer} src="./assets/images/hero-city-panorama.webp" alt="" className={`hero-city-layer hero-city-layer--${layer}`} />
         ))}
       </div>
       <div className="hero-route" aria-hidden="true">
@@ -15,7 +15,7 @@ export function HeroSection() {
         <span className="route-origin" /><span className="route-destination" />
       </div>
       <div className="hero-portrait-wrap" data-portrait>
-        <img src="./assets/images/avatar.png" alt="赵元浦个人头像" className="hero-portrait" />
+        <img src="./assets/images/avatar.webp" alt="赵元浦个人头像" className="hero-portrait" />
       </div>
       <div className="hero-copy">
         <h1 className="hero-title"><span>从西安出发，</span><span>在广州继续探索。</span></h1>

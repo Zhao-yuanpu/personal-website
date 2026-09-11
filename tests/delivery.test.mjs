@@ -19,7 +19,8 @@ test('delivery bundles exist and are non-empty', async () => {
   }
 });
 
-test('album bundle inlines cover images for file protocol pages', async () => {
+test('album bundle keeps cover images as independently cacheable files', async () => {
   const js = await readFile(new URL('../专辑/assets/app.js', import.meta.url), 'utf8');
-  assert.match(js, /data:image\/jpeg;base64,/);
+  assert.doesNotMatch(js, /data:image\/jpeg;base64,/);
+  assert.match(js, /assets\/covers\/cover-01\.jpg/);
 });

@@ -12,8 +12,8 @@ test('keeps the hero on the approved plain charcoal background', async () => {
     assert.match(hero, new RegExp(`['"]${layer}['"]`));
     assert.match(css, new RegExp(`\\.hero-city-layer--${layer}`));
   }
-  assert.match(hero, /hero-city-panorama\.png/);
-  assert.match(hero, /avatar\.png/);
+  assert.match(hero, /hero-city-panorama\.webp/);
+  assert.match(hero, /avatar\.webp/);
   assert.doesNotMatch(hero, /<svg className="city-line-art"/);
 });
 

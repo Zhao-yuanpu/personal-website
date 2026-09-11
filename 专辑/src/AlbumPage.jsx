@@ -39,10 +39,10 @@ export function AlbumPage() {
       sceneRef.current?.moveBy(1);
     } else if (event.key === 'Home') {
       event.preventDefault();
-      albums.slice(0, activeIndex).forEach(() => sceneRef.current?.moveBy(-1));
+      sceneRef.current?.moveTo(0);
     } else if (event.key === 'End') {
       event.preventDefault();
-      albums.slice(activeIndex + 1).forEach(() => sceneRef.current?.moveBy(1));
+      sceneRef.current?.moveTo(albums.length - 1);
     } else if (event.key === 'Enter') {
       event.preventDefault();
       sceneRef.current?.openCurrent();

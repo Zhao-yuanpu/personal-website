@@ -11,6 +11,15 @@ export const resolveCoverUrl = (src, scriptSrc) => {
 
 export const clampAlbumIndex = (value, count) => clamp(Math.round(value), 0, count - 1);
 
+export const getAlbumSnapTarget = ({ start, cursor, velocity = 0, count }) => {
+  const projected = cursor + clamp(velocity * 0.18, -0.65, 0.65);
+  const offset = projected - start;
+  const target = Math.abs(offset) < 0.28
+    ? start
+    : start + Math.sign(offset) * Math.max(1, Math.round(Math.abs(offset)));
+  return clampAlbumIndex(target, count);
+};
+
 export const syncCameraAspect = (camera, width, height) => {
   camera.aspect = width / Math.max(height, 1);
   camera.updateProjectionMatrix();
@@ -138,17 +147,33 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
   const textureLoader = new THREE.TextureLoader();
   if (window.location.protocol === 'file:') textureLoader.setCrossOrigin(undefined);
   const meshes = [];
-  const materials = [];
+  const frontMaterials = [];
+  const backMaterials = [];
+  const loadedCovers = new Set();
+  const loadingCovers = new Set();
 
-  const loadCover = (src, material) => {
+  const loadCover = (index) => {
+    if (loadedCovers.has(index) || loadingCovers.has(index)) return;
+    const item = albums[index];
+    const material = frontMaterials[index];
+    loadingCovers.add(index);
+    const src = covers[item.id] ?? resolveCoverUrl(item.coverSrc);
     textureLoader.load(src, (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 4);
       texture.minFilter = THREE.LinearMipmapLinearFilter;
       material.map = texture;
       material.needsUpdate = true;
+      loadingCovers.delete(index);
+      loadedCovers.add(index);
       scheduleRender();
     });
+  };
+
+  const loadNearbyCovers = (center) => {
+    for (let index = Math.max(0, Math.floor(center) - 4); index <= Math.min(albums.length - 1, Math.ceil(center) + 4); index += 1) {
+      loadCover(index);
+    }
   };
 
   albums.forEach((item) => {
@@ -171,8 +196,8 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
     mesh.userData.albumId = item.id;
     scene.add(mesh);
     meshes.push(mesh);
-    materials.push(front, back);
-    loadCover(covers[item.id] ?? resolveCoverUrl(item.coverSrc), front);
+    frontMaterials.push(front);
+    backMaterials.push(back);
   });
 
   const state = { cursor: clamp(startIndex, 0, albums.length - 1), intro: 0, mobile: false };
@@ -182,7 +207,9 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
   let activeIndex = -1;
   let dragging = false;
   let pointerStart = null;
-  let lastWheelAt = 0;
+  let queuedTarget = clampAlbumIndex(startIndex, albums.length);
+  let wheelDelta = 0;
+  let wheelTimer = null;
   let destroyed = false;
   let renderFrame = null;
 
@@ -192,6 +219,7 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
     if (nextActive !== activeIndex) {
       activeIndex = nextActive;
       onActiveChange?.(activeIndex);
+      loadNearbyCovers(activeIndex);
     }
     meshes.forEach((mesh, index) => {
       const offset = index - state.cursor;
@@ -218,17 +246,19 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
 
   const snap = (target) => {
     const destination = clampAlbumIndex(target, albums.length);
+    queuedTarget = destination;
     gsap.killTweensOf(state);
     gsap.to(state, {
       cursor: destination,
-      duration: reducedMotion() ? 0.12 : state.mobile ? 0.42 : 0.58,
-      ease: state.mobile ? 'power2.out' : 'power3.out',
+      duration: reducedMotion() ? 0.12 : state.mobile ? 0.3 : 0.34,
+      ease: 'power2.out',
       onUpdate: scheduleRender,
       onComplete: scheduleRender,
     });
   };
 
-  const moveBy = (amount) => snap(clampAlbumIndex(state.cursor, albums.length) + amount);
+  const moveTo = (target) => snap(target);
+  const moveBy = (amount) => moveTo(queuedTarget + amount);
   const openCurrent = () => onOpen?.(albums[clampAlbumIndex(state.cursor, albums.length)]);
 
   const resize = () => {
@@ -255,7 +285,22 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
   };
 
   const onPointerDown = (event) => {
-    pointerStart = { x: event.clientX, y: event.clientY, cursor: state.cursor, time: performance.now() };
+    if (wheelTimer !== null) {
+      clearTimeout(wheelTimer);
+      wheelTimer = null;
+    }
+    wheelDelta = 0;
+    gsap.killTweensOf(state);
+    queuedTarget = clampAlbumIndex(state.cursor, albums.length);
+    const time = performance.now();
+    pointerStart = {
+      x: event.clientX,
+      y: event.clientY,
+      cursor: state.cursor,
+      start: queuedTarget,
+      time,
+      samples: [{ value: state.cursor, time }],
+    };
     dragging = false;
     canvas.setPointerCapture?.(event.pointerId);
   };
@@ -267,19 +312,35 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
     const distance = Math.hypot(dx, dy);
     if (distance > 8) dragging = true;
     if (!dragging) return;
-    const dragDistance = state.mobile ? Math.max(canvas.clientHeight * 0.27, 160) : Math.max(canvas.clientWidth * 0.2, 230);
+    const dragDistance = state.mobile
+      ? clamp(canvas.clientHeight * 0.18, 110, 150)
+      : clamp(canvas.clientWidth * 0.15, 180, 260);
     const delta = state.mobile ? -dy / dragDistance : -dx / dragDistance;
     state.cursor = clamp(pointerStart.cursor + delta, -0.35, albums.length - 0.65);
+    const time = performance.now();
+    pointerStart.samples.push({ value: state.cursor, time });
+    while (pointerStart.samples.length > 2 && time - pointerStart.samples[0].time > 120) pointerStart.samples.shift();
     scheduleRender();
+  };
+
+  const getReleaseVelocity = () => {
+    const samples = pointerStart?.samples ?? [];
+    const last = samples.at(-1);
+    if (!last || performance.now() - last.time > 120) return 0;
+    const first = samples.find((sample) => last.time - sample.time <= 120) ?? samples[0];
+    const seconds = Math.max((last.time - first.time) / 1000, 0.016);
+    return clamp((last.value - first.value) / seconds, -6, 6);
   };
 
   const onPointerUp = (event) => {
     if (!pointerStart) return;
     const elapsed = performance.now() - pointerStart.time;
     const wasDragging = dragging;
+    const start = pointerStart.start;
+    const velocity = getReleaseVelocity();
     pointerStart = null;
     dragging = false;
-    if (wasDragging) snap(state.cursor);
+    if (wasDragging) snap(getAlbumSnapTarget({ start, cursor: state.cursor, velocity, count: albums.length }));
     else if (elapsed < 550) {
       const hitIndex = hitTest(event);
       if (hitIndex >= 0) onOpen?.(albums[hitIndex]);
@@ -289,14 +350,28 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
   const onPointerCancel = () => {
     pointerStart = null;
     dragging = false;
-    snap(state.cursor);
+    snap(queuedTarget);
   };
 
   const onWheel = (event) => {
-    if (state.mobile || performance.now() - lastWheelAt < 320) return;
+    if (state.mobile) return;
     event.preventDefault();
-    lastWheelAt = performance.now();
-    moveBy(event.deltaY > 0 ? 1 : -1);
+    const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? canvas.clientHeight : 1;
+    const delta = event.deltaY * unit;
+    if (!delta) return;
+    wheelDelta += delta;
+    const threshold = Math.max(60, canvas.clientWidth * 0.08);
+    while (Math.abs(wheelDelta) >= threshold) {
+      const direction = Math.sign(wheelDelta);
+      wheelDelta -= direction * threshold;
+      moveBy(direction);
+    }
+    if (wheelTimer !== null) clearTimeout(wheelTimer);
+    wheelTimer = setTimeout(() => {
+      wheelTimer = null;
+      wheelDelta = 0;
+      snap(queuedTarget);
+    }, 120);
   };
 
   const onPointerOver = (event) => {
@@ -319,6 +394,7 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
   window.addEventListener('resize', resize);
 
   resize();
+  loadNearbyCovers(startIndex);
   gsap.to(state, {
     intro: 1,
     duration: reducedMotion() ? 0.12 : 0.9,
@@ -328,9 +404,11 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
 
   return {
     moveBy,
+    moveTo,
     openCurrent,
     destroy: () => {
       destroyed = true;
+      if (wheelTimer !== null) clearTimeout(wheelTimer);
       if (renderFrame !== null) cancelAnimationFrame(renderFrame);
       gsap.killTweensOf(state);
       hover.forEach((value) => gsap.killTweensOf(value));
@@ -344,7 +422,7 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
       window.removeEventListener('resize', resize);
       geometry.dispose();
       etchTexture.dispose();
-      materials.forEach((material) => {
+      [...frontMaterials, ...backMaterials].forEach((material) => {
         material.map?.dispose();
         material.dispose();
       });

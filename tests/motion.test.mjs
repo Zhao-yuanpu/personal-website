@@ -38,3 +38,8 @@ test('section observer ignores duplicate entries and records scroll direction', 
   assert.match(source, /if \(activeSection\.current === name\) return;/);
   assert.match(source, /dataset\.scrollDirection/);
 });
+
+test('section observer can trigger on short mobile viewports', async () => {
+  const source = await readFile(new URL('../src/motion/MotionDirector.jsx', import.meta.url), 'utf8');
+  assert.match(source, /threshold: \[0\.12, 0\.35, 0\.55, 0\.72\]/);
+});

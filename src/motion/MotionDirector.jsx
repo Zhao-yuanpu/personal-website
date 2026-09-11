@@ -123,7 +123,7 @@ export function MotionDirector({ children, onSectionChange }) {
           ease: 'out(4)',
         });
       }
-    }, { threshold: [0.35, 0.55, 0.72] });
+    }, { threshold: [0.12, 0.35, 0.55, 0.72] });
 
     root.current.querySelectorAll('[data-section]').forEach((section) => observer.observe(section));
     return () => {

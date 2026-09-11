@@ -33,11 +33,11 @@ export function GrowthSection() {
 
       <div className="honor-archive">
         <figure className="certificate-card certificate-card--amc">
-          <img src="./assets/images/amc-certificate.jpg" alt="AMC 8 Honor Roll 前5%证书" />
+          <img loading="lazy" src="./assets/images/amc-certificate.webp" alt="AMC 8 Honor Roll 前5%证书" />
           <figcaption><span>01 / AMC 8</span><strong>HONOR ROLL · TOP 5%</strong></figcaption>
         </figure>
         <figure className="certificate-card certificate-card--ai">
-          <img src="./assets/images/ai-advanced-certificate.png" alt="人工智能训练师高级证书，编号已隐藏" />
+          <img loading="lazy" src="./assets/images/ai-advanced-certificate.webp" alt="人工智能训练师高级证书，编号已隐藏" />
           <figcaption><span>02 / AI TRAINER</span><strong>ADVANCED · 2026</strong></figcaption>
         </figure>
         <div className="archive-index">ARCHIVE<br /><b>02</b></div>
