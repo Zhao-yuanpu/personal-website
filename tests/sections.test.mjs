@@ -40,7 +40,7 @@ test('renders contact details from the shared configuration', async () => {
   const html = await source();
   assert.match(html, /\+86 1XX XXXX XXXX/);
   assert.match(html, /name@example\.com/);
-  assert.match(html, /wechat-qr\.webp/);
+  assert.doesNotMatch(html, /微信|wechat|二维码|qr/i);
 });
 
 test('only the growth section contains a drawable timeline path', async () => {

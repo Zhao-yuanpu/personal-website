@@ -31,6 +31,5 @@ export const siteConfig = {
   contact: {
     phone: '+86 1XX XXXX XXXX',
     email: 'name@example.com',
-    wechatQrSrc: './assets/images/wechat-qr.webp',
   },
 };

@@ -55,7 +55,7 @@ function animateInterests() {
 }
 
 function animateContact() {
-  animate('.contact-copy > *, .wechat-panel', {
+  animate('.contact-copy > *', {
     opacity: [0, 1],
     y: [28, 0],
     filter: ['blur(6px)', 'blur(0px)'],
@@ -73,7 +73,6 @@ function animateContact() {
     delay: stagger(75, { from: 'center', start: 200 }),
     ease: 'out(4)',
   });
-  animate('.qr-crop img', { filter: ['blur(7px)', 'blur(0px)'], opacity: [0.55, 1], duration: 900, delay: 540, ease: 'out(3)' });
   animate('.contact-axis', { opacity: [0, 0.55], scale: [0.8, 1], duration: 900, delay: 480, ease: 'out(4)' });
 }
 

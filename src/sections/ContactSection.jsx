@@ -1,7 +1,7 @@
 import { siteConfig } from '../config/siteConfig.js';
 
 export function ContactSection() {
-  const { phone, email, wechatQrSrc } = siteConfig.contact;
+  const { phone, email } = siteConfig.contact;
   return (
     <section id="contact" data-section="contact" className="section contact-section">
       <div className="contact-copy">
@@ -17,14 +17,6 @@ export function ContactSection() {
           </a>
         </div>
       </div>
-      <aside className="wechat-panel">
-        <div className="wechat-index"><span>WECHAT / 微信</span><b>03</b></div>
-        <figure className="qr-card">
-          <div className="qr-crop"><img loading="lazy" src={wechatQrSrc} alt="赵元浦的微信二维码" /></div>
-          <figcaption>微信二维码 <span>SCAN TO CONNECT</span></figcaption>
-        </figure>
-        <p>扫一扫，添加我为朋友 <b>↗</b></p>
-      </aside>
       <div className="contact-drafting" aria-hidden="true">
         <span>E3 LIBRARY / FRONT ELEVATION</span><i />
       </div>

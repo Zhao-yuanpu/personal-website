@@ -28,6 +28,5 @@ test('contact details have one central replacement interface', () => {
   assert.deepEqual(Object.keys(siteConfig.contact).sort(), [
     'email',
     'phone',
-    'wechatQrSrc',
   ]);
 });

@@ -7,7 +7,6 @@ const asset = (name) => fileURLToPath(new URL(`../assets/images/${name}`, import
 
 const requiredAssets = [
   'avatar.png',
-  'wechat-qr.png',
   'amc-certificate.jpg',
   'ai-advanced-certificate.png',
   'ximalaya-data.jpg',
@@ -26,9 +25,10 @@ const optimizedAssets = [
   'interest-movies.webp',
   'amc-certificate.webp',
   'ai-advanced-certificate.webp',
-  'wechat-qr.webp',
   'library-front-lineart.webp',
 ];
+
+const removedAssets = ['wechat-qr.png', 'wechat-qr.webp'];
 
 test('all runtime image assets are self-contained and non-empty', async () => {
   for (const name of requiredAssets) {
@@ -51,5 +51,11 @@ test('optimized runtime images are present and smaller than their source files',
     const source = await stat(asset(name.replace(/\.webp$/, name.includes('amc') ? '.jpg' : '.png')));
     assert.ok(optimized.size > 10_000, `${name} is unexpectedly small`);
     assert.ok(optimized.size < source.size, `${name} should be smaller than its source`);
+  }
+});
+
+test('the removed WeChat QR assets are no longer shipped', async () => {
+  for (const name of removedAssets) {
+    await assert.rejects(stat(asset(name)), { code: 'ENOENT' });
   }
 });

@@ -149,9 +149,9 @@ h1, h2, h3 { font-family: var(--serif); text-wrap: balance; }
 }
 
 /* Contact */
-.contact-section { min-height: 880px; display: grid; grid-template-columns: 1fr 506px; gap: 94px; padding-top: 156px; }
+.contact-section { min-height: 880px; padding-top: 156px; }
 .contact-copy { position: relative; z-index: 4; }
-.contact-copy > *, .wechat-panel { opacity: 0; }
+.contact-copy > * { opacity: 0; }
 .contact-copy h2 { margin: 28px 0 24px; font-size: clamp(62px, 6vw, 94px); line-height: 1.05; letter-spacing: -.05em; }
 .contact-lead { color: var(--muted); font-size: 16px; line-height: 1.85; letter-spacing: .04em; }
 .contact-channels { width: min(690px, 100%); display: grid; grid-template-columns: 1fr 1.2fr; gap: 58px; margin-top: 62px; padding-top: 20px; border-top: 1px solid var(--rule); }
@@ -161,16 +161,6 @@ h1, h2, h3 { font-family: var(--serif); text-wrap: balance; }
 .contact-channels span { color: #9a7c5d; font: 500 10px/1 var(--mono); letter-spacing: .17em; }
 .contact-channels strong { margin-top: 18px; font-size: 21px; letter-spacing: .04em; }
 .contact-channels small { margin-top: 10px; color: var(--muted-dark); font: 500 9px/1 var(--mono); letter-spacing: .12em; }
-.wechat-panel { position: relative; z-index: 5; padding-left: 54px; border-left: 1px solid rgba(174,128,81,.28); }
-.wechat-index { display: flex; justify-content: space-between; align-items: center; margin: 8px 0 22px; color: #8d775f; font: 500 10px/1 var(--mono); letter-spacing: .17em; }
-.wechat-index b { color: rgba(201,161,117,.42); font: 400 54px/1 Georgia, serif; }
-.qr-card { width: 390px; margin: 0; padding: 30px; background: white; color: #171717; box-shadow: 0 24px 70px rgba(0,0,0,.42); }
-.qr-crop { position: relative; width: 330px; height: 330px; overflow: hidden; background: white; }
-.qr-crop img { position: absolute; width: 415px; max-width: none; left: -42px; top: -184px; }
-.qr-card figcaption { display: flex; justify-content: space-between; align-items: end; padding-top: 18px; font-size: 13px; letter-spacing: .08em; }
-.qr-card figcaption span { color: #8c8175; font: 500 8px/1 var(--mono); letter-spacing: .13em; }
-.wechat-panel > p { width: 390px; margin-top: 20px; display: flex; justify-content: space-between; color: #8f877e; font-size: 13px; }
-.wechat-panel > p b { color: var(--orange); }
 .contact-drafting { position: absolute; z-index: 3; left: 5%; bottom: 31%; color: #95785b; font: 500 9px/1 var(--mono); letter-spacing: .17em; }
 .contact-drafting::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 12px; border: 1px solid var(--orange); border-radius: 50%; }
 .contact-drafting i { display: block; width: 280px; height: 8px; margin-top: 15px; border-top: 1px solid var(--rule); background: repeating-linear-gradient(90deg, rgba(174,128,81,.6) 0 1px, transparent 1px 35px); }
@@ -195,8 +185,7 @@ h1, h2, h3 { font-family: var(--serif); text-wrap: balance; }
   .honor-archive { grid-column: 1 / -1; width: 75%; height: 520px; margin: -60px auto 0; }
   .interests-header { grid-template-columns: 1fr; gap: 20px; }
   .interest-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
-  .contact-section { grid-template-columns: 1fr 430px; gap: 46px; min-height: 900px; }
-  .wechat-panel { padding-left: 32px; }
+  .contact-section { min-height: 900px; }
 }
 
 @media (max-width: 760px) {
@@ -224,10 +213,6 @@ h1, h2, h3 { font-family: var(--serif); text-wrap: balance; }
   .contact-copy h2 { font-size: 62px; }.contact-lead br { display: none; }
   .contact-channels { grid-template-columns: 1fr; gap: 26px; }
   .contact-channels a + a::before { display: none; }
-  .wechat-panel { margin-top: 58px; padding-left: 0; border-left: 0; }
-  .qr-card, .wechat-panel > p { width: min(390px, 100%); }
-  .qr-card { padding: 22px; }.qr-crop { width: 100%; height: auto; aspect-ratio: 1; }
-  .qr-crop img { width: 126%; left: -13%; top: -56%; }
   .library-assembly { width: 115%; left: -32%; bottom: 0; }
   .contact-drafting { left: 18px; bottom: 330px; }.contact-axis { display: none; }
 }
@@ -240,5 +225,5 @@ h1, h2, h3 { font-family: var(--serif); text-wrap: balance; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .hero-portrait-wrap, .hero-title span, .hero-meta, .hero-tags, .hero-city-layer, .hero-route, .city-label, .hero-direction, .scroll-cue,
-  .milestone, .certificate-card, .interests-header > *, .interest-module, .contact-copy > *, .wechat-panel, .building-slice { opacity: 1 !important; transform: none !important; filter: none !important; }
+  .milestone, .certificate-card, .interests-header > *, .interest-module, .contact-copy > *, .building-slice { opacity: 1 !important; transform: none !important; filter: none !important; }
 }
