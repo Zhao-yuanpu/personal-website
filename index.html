@@ -6,10 +6,33 @@
   <meta name="description" content="赵元浦的个人介绍网站：成长、荣誉、兴趣与联系方式。">
   <meta name="theme-color" content="#0b0c0c">
   <title>赵元浦 · 个人介绍</title>
-  <link rel="stylesheet" href="./assets/app.css?v=20260911-1">
-  <script defer src="./assets/app.js?v=20260911-1"></script>
+  <link rel="preload" as="image" href="./assets/images/hero-city-panorama.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="./assets/images/avatar.webp" fetchpriority="high">
+  <link rel="stylesheet" href="./assets/app.css">
+  <script type="module" src="./assets/app.js"></script>
 </head>
 <body>
-  <div id="app"><noscript>请启用 JavaScript 以浏览完整网站。</noscript></div>
+  <div id="app" class="boot">
+    <!-- 静态首屏骨架：JS 就绪前先呈现 Hero，挂载后由 React 无缝接管 -->
+    <section class="section hero-section">
+      <div class="hero-city" aria-hidden="true">
+        <img src="./assets/images/hero-city-panorama.webp" alt="" class="hero-city-layer hero-city-layer--xian" width="1200" height="751" decoding="async">
+        <img src="./assets/images/hero-city-panorama.webp" alt="" class="hero-city-layer hero-city-layer--campus" width="1200" height="751" decoding="async">
+        <img src="./assets/images/hero-city-panorama.webp" alt="" class="hero-city-layer hero-city-layer--guangzhou" width="1200" height="751" decoding="async">
+      </div>
+      <div class="hero-portrait-wrap">
+        <img src="./assets/images/avatar.webp" alt="赵元浦个人头像" class="hero-portrait" width="900" height="1350" fetchpriority="high" decoding="async">
+      </div>
+      <div class="hero-copy">
+        <h1 class="hero-title"><span>从西安出发，</span><span>在广州继续探索。</span></h1>
+        <div class="hero-meta">
+          <p>华南理工大学 · 计算机科学与技术</p>
+          <p>2026—2030 · 大学城校区</p>
+        </div>
+        <p class="hero-tags">技术 / 音乐 / 运动 / 电影</p>
+      </div>
+    </section>
+    <noscript>请启用 JavaScript 以浏览完整网站。</noscript>
+  </div>
 </body>
 </html>

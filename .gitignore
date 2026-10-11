@@ -1,4 +1,6 @@
 node_modules/
+dist/
+kimi/
 tests/*.png
 .DS_Store
 Thumbs.db

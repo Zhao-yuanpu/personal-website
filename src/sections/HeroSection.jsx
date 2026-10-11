@@ -1,11 +1,16 @@
 const cityLayers = ['xian', 'campus', 'guangzhou'];
 
 export function HeroSection() {
+  const goToGrowth = (event) => {
+    event.preventDefault();
+    document.getElementById('growth')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section id="home" data-section="home" className="section hero-section">
       <div className="hero-city" aria-hidden="true">
         {cityLayers.map((layer) => (
-          <img key={layer} src="./assets/images/hero-city-panorama.webp" alt="" className={`hero-city-layer hero-city-layer--${layer}`} />
+          <img key={layer} src="./assets/images/hero-city-panorama.webp" alt="" className={`hero-city-layer hero-city-layer--${layer}`} width="1200" height="751" fetchPriority="high" decoding="async" />
         ))}
       </div>
       <div className="hero-route" aria-hidden="true">
@@ -15,7 +20,7 @@ export function HeroSection() {
         <span className="route-origin" /><span className="route-destination" />
       </div>
       <div className="hero-portrait-wrap" data-portrait>
-        <img src="./assets/images/avatar.webp" alt="赵元浦个人头像" className="hero-portrait" />
+        <img src="./assets/images/avatar.webp" alt="赵元浦个人头像" className="hero-portrait" width="900" height="1350" fetchPriority="high" decoding="async" />
       </div>
       <div className="hero-copy">
         <h1 className="hero-title"><span>从西安出发，</span><span>在广州继续探索。</span></h1>
@@ -28,7 +33,7 @@ export function HeroSection() {
       <div className="city-label city-label--left">XI’AN</div>
       <div className="city-label city-label--right">GUANGZHOU</div>
       <div className="hero-direction">XI’AN　→　GUANGZHOU</div>
-      <a className="scroll-cue" href="#growth" aria-label="前往成长经历">↗</a>
+      <a className="scroll-cue" href="#growth" aria-label="前往成长经历" onClick={goToGrowth}>↗</a>
     </section>
   );
 }

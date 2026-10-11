@@ -28,7 +28,7 @@ test('album data has local covers and official Apple Music destinations', () => 
     'https://music.apple.com/cn/album/transcendental-liszt-%C3%A9tudes/1440779332',
   );
   albums.forEach((item, index) => {
-    assert.match(item.coverSrc, /^\.\/assets\/covers\/cover-\d+\.jpg$/);
+    assert.match(item.coverSrc, /^\.\/assets\/covers\/cover-\d+\.webp$/);
     assert.match(item.appleMusicUrl, /^https:\/\/music\.apple\.com\/cn\/album\//);
     assert.equal(new URL(item.appleMusicUrl).pathname.split('/').at(-1), expectedAlbumIds[index]);
     assert.doesNotMatch(item.appleMusicUrl, /\/search(?:\?|\/)/);

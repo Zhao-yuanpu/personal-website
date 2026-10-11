@@ -5,8 +5,8 @@ const sectionNames = ['home', 'growth', 'interests', 'contact'];
 
 function animateHero() {
   createTimeline({ defaults: { ease: 'out(4)' } })
-    .add('.hero-city-layer', { opacity: [0, 1], scale: [0.985, 1], x: (_, index) => index === 0 ? [-46, 0] : index === 2 ? [46, 0] : [0, 0], filter: ['blur(5px)', 'blur(0px)'], duration: 1150, delay: stagger(130) }, 0)
-    .add('.hero-portrait-wrap', { opacity: [0, 1], y: [42, 0], scale: [0.97, 1], filter: ['blur(8px) brightness(.72)', 'blur(0px) brightness(1)'], duration: 1100 }, 180)
+    .add('.hero-city-layer', { opacity: [0, 1], scale: [0.985, 1], x: (_, index) => index === 0 ? [-46, 0] : index === 2 ? [46, 0] : [0, 0], duration: 1150, delay: stagger(130) }, 0)
+    .add('.hero-portrait-wrap', { opacity: [0, 1], y: [42, 0], scale: [0.97, 1], duration: 1100 }, 180)
     .add('.hero-title span', { opacity: [0, 1], y: ['115%', '0%'], duration: 850, delay: stagger(110) }, 430)
     .add('.hero-meta, .hero-tags', { opacity: [0, 1], y: [16, 0], duration: 620, delay: stagger(80) }, 650)
     .add('.hero-route, .city-label, .hero-direction, .scroll-cue', { opacity: [0, 1], y: [8, 0], duration: 620, delay: stagger(70) }, 900);
@@ -58,7 +58,6 @@ function animateContact() {
   animate('.contact-copy > *', {
     opacity: [0, 1],
     y: [28, 0],
-    filter: ['blur(6px)', 'blur(0px)'],
     duration: 780,
     delay: stagger(100),
     ease: 'out(4)',
@@ -68,7 +67,6 @@ function animateContact() {
     x: (_, index) => [(index - 3) * 26, 0],
     y: (_, index) => [Math.abs(index - 3) * 18 + 24, 0],
     scale: [0.93, 1],
-    filter: ['blur(5px) brightness(1.8)', 'blur(0px) brightness(1)'],
     duration: 1050,
     delay: stagger(75, { from: 'center', start: 200 }),
     ease: 'out(4)',

@@ -5,7 +5,7 @@ const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const DESKTOP_TILT = 0.6;
 const reducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 export const resolveCoverUrl = (src, scriptSrc) => {
-  const runtimeScript = scriptSrc ?? [...document.scripts].find((script) => /\/assets\/app\.js(?:\?|$)/.test(script.src))?.src;
+  const runtimeScript = scriptSrc ?? [...document.scripts].find((script) => /\/assets\/app[^/]*\.js(?:\?|$)/.test(script.src))?.src;
   return runtimeScript ? new URL(`../${src.replace(/^\.\//, '')}`, runtimeScript).href : new URL(src, document.baseURI).href;
 };
 
@@ -77,8 +77,9 @@ const makeEtchTexture = () => {
 
 const makeBackTexture = (item) => {
   const canvas = document.createElement('canvas');
-  canvas.width = canvas.height = 1024;
+  canvas.width = canvas.height = 512;
   const context = canvas.getContext('2d');
+  context.scale(0.5, 0.5);
   context.fillStyle = '#181a1a';
   context.fillRect(0, 0, 1024, 1024);
   context.strokeStyle = 'rgba(191, 198, 190, .13)';
@@ -173,8 +174,19 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
   const loadNearbyCovers = (center) => {
     for (let index = Math.max(0, Math.floor(center) - 4); index <= Math.min(albums.length - 1, Math.ceil(center) + 4); index += 1) {
       loadCover(index);
+      ensureBackTexture(index);
     }
   };
+
+  // 背面曲目纹理开销大，滑到附近才生成，避免启动时阻塞主线程
+  const ensuredBackTextures = new Set();
+  function ensureBackTexture(index) {
+    if (ensuredBackTextures.has(index)) return;
+    ensuredBackTextures.add(index);
+    backMaterials[index].map = makeBackTexture(albums[index]);
+    backMaterials[index].needsUpdate = true;
+    scheduleRender();
+  }
 
   albums.forEach((item) => {
     const front = new THREE.MeshStandardMaterial({
@@ -188,7 +200,6 @@ export const createAlbumScene = ({ canvas, albums, covers = {}, startIndex = 3, 
       color: 0xffffff,
       roughness: 0.9,
       metalness: 0.02,
-      map: makeBackTexture(item),
       bumpMap: etchTexture,
       bumpScale: 0.01,
     });

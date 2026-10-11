@@ -1,26 +1,27 @@
-import { useRef } from 'react';
-import { useGSAP } from '@gsap/react';
-import { gsap } from 'gsap';
+import { useEffect, useRef } from 'react';
 import { InterestModule } from './InterestModule.jsx';
 import { getAlbumPortalTransform, shouldAnimateAlbumPortal } from './albumPortal.js';
-
-gsap.registerPlugin(useGSAP);
 
 export function MusicModule({ item }) {
   const moduleRef = useRef(null);
   const layerRef = useRef(null);
   const timelineRef = useRef(null);
-  const { contextSafe } = useGSAP(() => () => {
+
+  useEffect(() => () => {
     timelineRef.current?.kill();
     layerRef.current?.remove();
     document.documentElement.classList.remove('album-portal-active');
-  }, { scope: moduleRef });
+  }, []);
 
-  const openAlbum = contextSafe((event) => {
+  const openAlbum = async (event) => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!shouldAnimateAlbumPortal(event, reducedMotion)) return;
     event.preventDefault();
     if (timelineRef.current) return;
+
+    // GSAP 仅在打开专辑传送门时按需加载，不占首屏体积
+    const { gsap } = await import('gsap');
+    if (!moduleRef.current) return;
 
     const card = moduleRef.current;
     const image = card.querySelector('.interest-image');
@@ -60,7 +61,7 @@ export function MusicModule({ item }) {
       .to(shell, { autoAlpha: 0, duration: 0.48, ease: 'power2.inOut' }, 0.06)
       .to(cover, { x: target.x, y: target.y, scale: target.scale, duration: 0.74, ease: 'power3.inOut' }, 0)
       .to(cover, { autoAlpha: 0, scale: target.scale * 1.015, duration: 0.24, ease: 'power2.in' }, 0.64);
-  });
+  };
 
   return (
     <InterestModule item={item} moduleRef={moduleRef} onClick={openAlbum}>

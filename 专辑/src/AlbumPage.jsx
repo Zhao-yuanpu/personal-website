@@ -3,7 +3,6 @@ import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { albums } from './albums.js';
 import { coverData } from './covers.js';
-import { createAlbumScene } from './albumScene.js';
 
 gsap.registerPlugin(useGSAP);
 
@@ -19,15 +18,23 @@ export function AlbumPage() {
   }, { scope: pageRef });
 
   useEffect(() => {
-    sceneRef.current = createAlbumScene({
-      canvas: canvasRef.current,
-      albums,
-      covers: coverData,
-      startIndex: 3,
-      onActiveChange: setActiveIndex,
-      onOpen: (album) => window.location.assign(album.appleMusicUrl),
+    let cancelled = false;
+    // three.js 场景体积大，UI 先渲染，再异步拉起 WebGL
+    import('./albumScene.js').then(({ createAlbumScene }) => {
+      if (cancelled) return;
+      sceneRef.current = createAlbumScene({
+        canvas: canvasRef.current,
+        albums,
+        covers: coverData,
+        startIndex: 3,
+        onActiveChange: setActiveIndex,
+        onOpen: (album) => window.location.assign(album.appleMusicUrl),
+      });
     });
-    return () => sceneRef.current?.destroy();
+    return () => {
+      cancelled = true;
+      sceneRef.current?.destroy();
+    };
   }, []);
 
   const handleKeyDown = (event) => {

@@ -27,7 +27,7 @@ export function ContactSection() {
             key={index}
             style={{ clipPath: `inset(0 ${(6 - index) * 100 / 7}% 0 ${index * 100 / 7}%)` }}
           >
-            <img loading="lazy" src="./assets/images/library-front-lineart.webp" alt="" />
+            <img loading="lazy" decoding="async" width="1200" height="600" src="./assets/images/library-front-lineart.webp" alt="" />
           </div>
         ))}
       </div>

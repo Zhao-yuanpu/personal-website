@@ -17,7 +17,7 @@ const album = (id, title, artist, tracks) => ({
   id,
   title,
   artist,
-  coverSrc: `./assets/covers/${id}.jpg`,
+  coverSrc: `./assets/covers/${id}.webp`,
   tracks,
   appleMusicUrl: appleMusicAlbums[id],
 });

@@ -37,11 +37,12 @@ test('all runtime image assets are self-contained and non-empty', async () => {
   }
 });
 
-test('the advanced certificate is a website derivative, not the original file', async () => {
+test('the advanced certificate is a website derivative, not the original file', async (t) => {
   const websiteCopy = await stat(asset('ai-advanced-certificate.png'));
-  const original = await stat(
-    fileURLToPath(new URL('../../证书/人工智能训练师（高级）-20260823.jpg', import.meta.url)),
-  );
+  const originalPath = fileURLToPath(new URL('../../证书/人工智能训练师（高级）-20260823.jpg', import.meta.url));
+  // 原件仅存在于本机，CI 等环境下跳过对比
+  const original = await stat(originalPath).catch(() => null);
+  if (!original) return t.skip('original certificate file is only available locally');
   assert.notEqual(websiteCopy.size, original.size);
 });
 
